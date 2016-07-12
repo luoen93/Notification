@@ -12,20 +12,27 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
     private static final int NOTIFICATION_FLAG = 1;
+
+    private TextView mTextView;
+    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mTextView = (TextView) findViewById(R.id.test_button);
+
+
     }
 
     public void notificationMethod(View view) {
         // 在Android进行通知处理，首先需要重系统哪里获得通知管理器NotificationManager，它是一个系统Service。
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationManager bigmanager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         switch (view.getId()) {
             // 默认通知
 //            case R.id.btn1:
@@ -116,17 +123,23 @@ public class MainActivity extends AppCompatActivity {
                 myNotify2.flags = Notification.FLAG_NO_CLEAR;// 不能够自动清除
 
                 RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.my_notification);
+                RemoteViews remoteViews_big = new RemoteViews(getPackageName(), R.layout.my_big_notification);
 
+
+                Intent intent2 = new Intent(Intent.ACTION_MAIN);
+
+                PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                remoteViews_big.setOnClickPendingIntent(R.id.music_play, pi);
 //                myNotify2.bigContentView = remoteViews;
 
-//                Intent intent2 = new Intent(Intent.ACTION_MAIN);
 
-                PendingIntent contentIntent2 = PendingIntent.getActivity(this, 0,
+                PendingIntent contentIntent_main = PendingIntent.getActivity(this, 0,
                         new Intent(this, MainActivity.class), 0);
 
-                myNotify2.contentIntent = contentIntent2;
+                myNotify2.contentIntent = contentIntent_main;
 
-                myNotify2.bigContentView = remoteViews;
+                myNotify2.bigContentView = remoteViews_big;
                 myNotify2.contentView = remoteViews;
 
                 manager.notify(NOTIFICATION_FLAG, myNotify2);
